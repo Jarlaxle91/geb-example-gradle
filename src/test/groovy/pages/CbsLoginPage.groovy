@@ -2,39 +2,61 @@ package pages
 
 import geb.Browser
 import geb.Page
+import geb.navigator.DefaultNavigator
+import geb.navigator.Navigator
+import groovy.transform.CompileStatic
 import modules.CbsLoginPageModule
+
+import static geb.Browser.drive
 
 class CbsLoginPage extends Page {
     static at = { title == "Log in to CBS" }
 
-    static content = {
+    static public content = {
+        form { $("form") }
         loginForm { module(CbsLoginPageModule) }
     }
 
-    static void goToCBSPage() {
-        Browser.drive {
-            go(baseUrl)             //ToDo разобраться с переопределением baseUrl
-        }
+
+
+    void fillCredentialsForm(String username, String password) {
+        drive(getBrowser(), {
+            getBrowser().to(this)
+            loginForm.loginField(form).value(username)
+            loginForm.passwordField(form).value(password)
+        })
     }
 
-    static fillCredentialsForm(String username, String password) {
-        Browser.drive {
-            to CbsLoginPage
-            loginForm.loginField.value(username)
-            loginForm.passwordField.value(password)
-        }
+    void clickLoginButton() {
+        drive(getBrowser(), {
+            getBrowser().at(this)
+            loginButton.click(MainPageCbs)
+        })
     }
 
-    static void clickLoginButton() {
-        Browser.drive {
-            at CbsLoginPage
-            loginForm.loginButton.click()
-        }
+    static getLoginButton() {
+     loginButton as DefaultNavigator
     }
 
-    static authorizeInCbs(String username, String password) {
+    void authorizeInCbs(String username, String password) {
         fillCredentialsForm(username, password)
         clickLoginButton()
+    }
+
+    void iAmSuccessfulAuthorizeInCbs() {
+        fillCredentialsForm("cbs-tester-1", "123_Qwerty")
+        clickLoginButton()
+        println("Text")
+//        drive(getBrowser(), {
+//            browser.createPage(MainPageCbs.class).verifyPageIsDisplayed()
+//        })
+    }
+
+    void getErrorMessage() {
+        drive(getBrowser(), {
+            getBrowser().at(this)
+            loginForm.error
+        })
     }
 }
 
