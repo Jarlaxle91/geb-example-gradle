@@ -1,9 +1,4 @@
-import geb.Browser
-import org.junit.jupiter.api.BeforeEach
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions
-import tests.BaseTest
-import tests.LoginToCbsTest
+import org.openqa.selenium.chrome.ChromeDriver
 
 waiting {
     timeout = 2
@@ -11,6 +6,7 @@ waiting {
 
 environments {
     driver = { new ChromeDriver() }
+
 //    chrome {
 //        driver = { new ChromeDriver() }
 //    }
