@@ -1,18 +1,40 @@
 package helpers
 
 import geb.Browser
-import geb.Page
 import geb.navigator.Navigator
+import pages.MainPageCbs
 
-import static geb.Browser.drive
+class NavigationHelper {
 
- class NavigationHelper extends Page{
-
-    void clickBy(Navigator navigator) {
-        drive(getBrowser(), {
-            getBrowser().to(this)
-            navigator.click()
+    static void windowIsDisplayed(String windowTitle, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            Navigator window = window(windowTitle)
+            window.isDisplayed()
         })
     }
+
+    static void openWindow(String windowTitle, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            waitFor(60) { mainMenu.topToolBar }
+
+            mainMenu.dictionaries.click()
+            mainMenu.swiftCodesMenu.click()
+            mainMenu.swiftCodesManual.click()
+            Navigator window = window(windowTitle)
+            window.isDisplayed()
+        })
+    }
+
+    static void pressAddButton(String windowTitle, String buttonTitle, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            Navigator window = window(windowTitle)
+            button(window, buttonTitle).click()
+            window(windowTitle).isDisplayed()
+        })
+    }
+
 
 }
