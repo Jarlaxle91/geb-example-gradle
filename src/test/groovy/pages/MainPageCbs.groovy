@@ -28,8 +28,7 @@ class MainPageCbs extends Page {
         //fields
         textAreaByName { Navigator window, String inputName -> window.$('div.x-field', text: contains(inputName)).$('textarea') }
         inputByName { Navigator window, String inputName -> window.$('div.x-field', text: contains(inputName)).$('input') }
-
-
+        valueOfField { Navigator window, String inputName -> window.$('div.x-field', text: contains(inputName)) }
     }
 
 

@@ -2,6 +2,8 @@ package helpers
 
 import geb.Browser
 import geb.navigator.Navigator
+import io.qameta.allure.Step
+import org.openqa.selenium.By
 import pages.MainPageCbs
 
 class NavigationHelper {
@@ -27,6 +29,7 @@ class NavigationHelper {
         })
     }
 
+    @Step(value = "Press {1} button in window {0}")
     static void pressButtonInWindow(String windowTitle, String buttonTitle, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
@@ -35,31 +38,37 @@ class NavigationHelper {
         })
     }
 
+    @Step(value = "Window {0} was closed automatically")
+    static void windowWasClosedAutomatically(String windowTitle, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            Navigator window = window(windowTitle)
+            window.isEmpty()
+        })
+    }
+
+    @Step(value = "Select field {0} and set value {1}")
     static selectFieldAndSetValue(String inputName, String valueField, String windowTitle, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
             Navigator window = window(windowTitle)
-            Navigator currentField = waitFor { InputsHelper.checkInputName(inputName, window, browser) } as Navigator
+            def currentField = waitFor { InputsHelper.checkInputName(inputName, window, browser) }
             InputsHelper.checkInputField(inputName, valueField, currentField, browser)
         })
     }
 
-
-
-    static setInputField(Navigator selector, String value, Browser browser) {
+    @Step(value = "Select field {0} and set value {1} in dropdown list")
+    static selectFieldOfDropdownListAndSetValue(String inputName, String valueField, String windowTitle, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
-            selector.value(value)
-            ''
+            Navigator window = window(windowTitle)
+            Navigator currentField = valueOfField(window, inputName)
+            InputsHelper.selectOption(currentField, valueField, browser)
         })
     }
 
 
 
-//    static setFormField(Navigator selector, String value, Browser browser) {
-//        Browser.drive(browser, {
-//            at MainPageCbs
-//            selector.$('input').value(value)
-//        })
-//    }
+
+
 }

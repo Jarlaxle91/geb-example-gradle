@@ -1,11 +1,13 @@
 package helpers
 
 import geb.Browser
+import io.qameta.allure.Step
 import pages.CbsLoginPage
 import pages.MainPageCbs
 
 class SessionHelper {
 
+    @Step(value = "Fill in login with {0}")
     static void fillLoginField(String login, Browser browser) {
         Browser.drive(browser, {
             to CbsLoginPage
@@ -13,6 +15,7 @@ class SessionHelper {
         })
     }
 
+    @Step(value = "Fill in password with {0}")
     static void fillPasswordField(String password, Browser browser) {
         Browser.drive(browser, {
             at CbsLoginPage
@@ -20,6 +23,7 @@ class SessionHelper {
         })
     }
 
+    @Step(value = "Fill login form with login {0} and password {1}")
     static void fillLoginForm(String login, String password, Browser browser) {
         Browser.drive(browser, {
             to CbsLoginPage
@@ -28,6 +32,7 @@ class SessionHelper {
         })
     }
 
+    @Step(value = "Authorization in CBS")
     static void authorizeInCbs(String login, String password, Browser browser) {
         Browser.drive(browser, {
             to CbsLoginPage
@@ -39,6 +44,7 @@ class SessionHelper {
         })
     }
 
+    @Step(value = "Click login button")
     static void pressLoginButton(Browser browser) {
         Browser.drive(browser, {
             at CbsLoginPage
