@@ -27,14 +27,39 @@ class NavigationHelper {
         })
     }
 
-    static void pressAddButton(String windowTitle, String buttonTitle, Browser browser) {
+    static void pressButtonInWindow(String windowTitle, String buttonTitle, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
             Navigator window = window(windowTitle)
             button(window, buttonTitle).click()
-            window(windowTitle).isDisplayed()
+        })
+    }
+
+    static selectFieldAndSetValue(String inputName, String valueField, String windowTitle, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            Navigator window = window(windowTitle)
+            Navigator currentField = waitFor { InputsHelper.checkInputName(inputName, window, browser) } as Navigator
+            InputsHelper.checkInputField(inputName, valueField, currentField, browser)
         })
     }
 
 
+
+    static setInputField(Navigator selector, String value, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            selector.value(value)
+            ''
+        })
+    }
+
+
+
+//    static setFormField(Navigator selector, String value, Browser browser) {
+//        Browser.drive(browser, {
+//            at MainPageCbs
+//            selector.$('input').value(value)
+//        })
+//    }
 }
