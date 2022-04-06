@@ -45,8 +45,9 @@ class ClassicGebTest extends GebReportingTest {
     void createSwiftCode() {
         SessionHelper.authorizeInCbs("cbs-admin", "123_Qwerty", browser)
         ManualSwiftCodesHelper.openManualSwiftCodesWindow(browser)
-        ManualSwiftCodesHelper.pressAddButton(browser)
+        NavigationHelper.pressButtonInWindow("SWIFT codes manual", "Add", browser)
         NavigationHelper.windowIsDisplayed("Add SWIFT code", browser)
+        NavigationHelper.selectFieldAndSetValue("Code", "BNS123ZASXX", "Add SWIFT code", browser)
     }
 
 }

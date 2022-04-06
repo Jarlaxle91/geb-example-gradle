@@ -16,13 +16,18 @@ class MainPageCbs extends Page {
         swiftCodesManualWindowModule { module SwiftCodesManualWindowModule }
         swiftCodeCreationWindow { module SwiftCodeCreationWindow }
 
+        //windows
         window { String titleName ->
             def header = $('body.x-body').$('div.x-window').$('div.x-title-text', text: contains(titleName))
             header.empty ? header : header.parents('div.x-window')
         }
 
+        //buttons
         button { Navigator window, String buttonTitle -> window.$('.x-btn').has('.x-btn-inner', innerHTML: contains(buttonTitle)) }
 
+        //fields
+        textAreaByName { Navigator window, String inputName -> window.$('div.x-field', text: contains(inputName)).$('textarea') }
+        inputByName { Navigator window, String inputName -> window.$('div.x-field', text: contains(inputName)).$('input') }
 
 
     }
