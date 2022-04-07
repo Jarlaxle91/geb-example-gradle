@@ -63,27 +63,6 @@ class NavigationHelper {
         })
     }
 
-    static applyFilterInWindow(String property, String operator, String value, String windowTitle, Browser browser) {
-        Browser.drive(browser, {
-            at MainPageCbs
-            Navigator window = waitFor(10) { window(windowTitle) }
-            FiltersHelper.expandFilter(window, browser)
-            FiltersHelper.clearFilter(window, browser)
-            FiltersHelper.selectValueOfPropertyField(window, property, browser)
-            FiltersHelper.selectValueOfOperatorField(window, operator, browser)
 
-            if (property == 'Payment details') {
-                FiltersHelper.fillValueOfFilter(window, Store.getVar(value), browser)
-            } else if (value.contains(' > ')) {
-                FiltersHelper.fillValueOfFilter(window, Store.getVar(value.split('\\ > ')[0])
-                        .getAt(value.split('\\ > ')[1]) as String, browser)
-            } else {
-                FiltersHelper.fillValueOfFilter(window, value, browser)
-            }
-            FiltersHelper.applyFilter(window, browser)
-            FiltersHelper.collapseFilter(window, browser)
-
-        })
-    }
 
 }
