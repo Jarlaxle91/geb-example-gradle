@@ -56,20 +56,18 @@ class MainPageCbs extends Page {
             $(By.xpath('//div[contains(@class, "x-boundlist-floating")][last()]' +
                     '//ul[contains(@class, "x-list-plain")]//li[text()="' + property + '"]')) }
 
-        filterOperatorTrigger { Navigator window ->
-            window.$(By.xpath('//input[contains(@name, "filterField")]/..' +
+        filterOperatorTrigger { $(By.xpath('//input[contains(@name, "filterField")]/..' +
                     '//input[contains(@aria-owns, "boundlist")]/../../../../..//' +
                     'div[contains(@class, "FilterOperator")]//div[contains(@class, "x-form-arrow-trigger")]')).last() }
 
-        elementOperatorList { Navigator operator ->
+        elementOperatorList { String operator ->
             $(By.xpath('//div[contains(@class, "x-boundlist-floating")][last()]//ul[contains(@class, "x-list-plain")]' +
                     '//li[text()="' + operator + '"]')) }
 
-        filterPrimValueTrigger { Navigator window ->
-            window.$(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]' +
-                    '//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
+        filterPrimValueTrigger { window -> $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
+        filterPrimValueTrigger1 { window -> $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
 
-        elementPrimValueList { Navigator primValue ->
+        elementPrimValueList { String primValue ->
             $(By.xpath('//div[contains(@class, "x-boundlist-floating")][last()]' +
                     '//ul[contains(@class, "x-list-plain")]//li[text()="' + primValue + '"]')) }
 

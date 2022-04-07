@@ -6,6 +6,75 @@ import pages.MainPageCbs
 
 class FiltersHelper {
 
+    static applyFilterInWindow(String property, String operator, String value, String windowTitle, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            Navigator window = waitFor(10) { window(windowTitle) }
+            expandFilter(window, browser)
+            clearFilter(window, browser)
+            selectValueOfPropertyField(window, property, browser)
+            selectValueOfOperatorField(window, operator, browser)
+
+            if (property == 'Payment details') {
+                fillValueOfFilter(window, Store.getVar(value), browser)
+            } else if (value.contains(' > ')) {
+                fillValueOfFilter(window, Store.getVar(value.split('\\ > ')[0])
+                        .getAt(value.split('\\ > ')[1]) as String, browser)
+            } else {
+                fillValueOfFilter(window, value, browser)
+            }
+            applyFilter(window, browser)
+            collapseFilter(window, browser)
+        })
+    }
+
+    static setMultifilter(Navigator window, data, Browser browser) {
+        expandFilter(window, browser)
+        clearFilter(window, browser)
+        def caclulatedDate
+
+        data.each {
+            selectValueOfPropertyField(window, it.name as String, browser)
+            selectValueOfOperatorField(window, it.operator as String, browser)
+            if (!filterPrimValueTrigger(window).isEmpty()) {
+                filterPrimValueTrigger(window).click()
+                if (it.primValue == 'Today') {
+                    caclulatedDate = DateTimeUtil.getNameOperday()
+                    def calculatedCell = waitFor { $('div.x-boundlist-item', text: caclulatedDate) }
+                    calculatedCell.click()
+                } else if (it.primValue.contains('Today ')) {
+                    caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.primValue)
+                    def calculatedCell = waitFor { page.$('div.x-boundlist-item', text: caclulatedDate) }
+                    calculatedCell.click()
+                } else
+                    firstFilterValueField(window).value(Store.getVar(it.primValue))
+
+            } else {
+                if (it.primValue == 'Today') {
+                    caclulatedDate = DateTimeUtil.getNameOperday()
+                    firstFilterValueField(window).value(caclulatedDate)
+                } else if (it.primValue.contains('Today ')) {
+                    caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.primValue)
+                    firstFilterValueField(window).value(caclulatedDate)
+                } else
+                    firstFilterValueField(window).value(Store.getVar(it.primValue))
+            }
+
+            if (!secondFilterValueField(window).empty) {
+                if (it.secondValue == 'Today') {
+                    caclulatedDate = DateTimeUtil.getNameOperday()
+                    page.secondFilterValueField(window).value(caclulatedDate)
+                } else if (it.secondValue.contains('Today ')) {
+                    caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.secondValue)
+                    secondFilterValueField(window).value(caclulatedDate)
+                } else
+                    secondFilterValueField(window).value(Store.getVar(it.secondValue))
+            }
+        }
+        applyFilter(window, browser)
+        collapseFilter(window, browser)
+    }
+
 
     static void expandFilter(Navigator window, Browser browser) {
         Browser.drive(browser, {
@@ -41,7 +110,7 @@ class FiltersHelper {
     static void selectValueOfOperatorField(Navigator window, String operator, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
-            filterOperatorTrigger(window).click()
+            filterOperatorTrigger.click()
             elementOperatorList(operator).click()
         })
     }
@@ -49,8 +118,8 @@ class FiltersHelper {
     static void fillValueOfFilter(Navigator window, Object primValue, Object secondValue = null, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
-            if (!filterPrimValueTrigger(window).empty) {
-                filterPrimValueTrigger(window).click()
+            if (!filterPrimValueTrigger1(window).empty) {
+                filterPrimValueTrigger.click()
                 waitFor() { !elementPrimValueList(primValue).empty }
                 sleep(100)
                 waitFor() { elementPrimValueList(primValue).isDisplayed() }
