@@ -29,7 +29,7 @@ class NavigationHelper {
     static void pressButtonInWindow(String windowTitle, String buttonTitle, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
-            Navigator window = window(windowTitle)
+            Navigator window = waitFor { window(windowTitle) }
             button(window, buttonTitle).click()
         })
     }
@@ -63,6 +63,23 @@ class NavigationHelper {
         })
     }
 
+
+    static void inWindowDisplayedRecords(String windowTitle, int amountOfRecords, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            Navigator window = waitFor(30) { window(windowTitle) }
+            waitFormLoading(window, browser)
+        })
+    }
+
+    static void waitFormLoading(Navigator window, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            if (!xmask(window).isEmpty()) {
+                waitFor(10) { !xmaskVisible(window).isEmpty() }
+            }
+        })
+    }
 
 
 }

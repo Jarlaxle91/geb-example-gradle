@@ -2,7 +2,7 @@ package tests
 
 import geb.Browser
 import geb.junit5.GebReportingTest
-import helpers.ManualSwiftCodesHelper
+import helpers.FilterHelper
 import helpers.NavigationHelper
 import helpers.SessionHelper
 import io.github.bonigarcia.seljup.SeleniumJupiter
@@ -58,15 +58,16 @@ class ClassicGebTest extends GebReportingTest {
     void createSwiftCode() {
         SessionHelper.authorizeInCbs("cbs-admin", "123_Qwerty", browser)
         NavigationHelper.openWindowByPath("Dictionaries > SWIFT codes > SWIFT codes manual", browser)
-//        NavigationHelper.pressButtonInWindow("SWIFT codes manual", "Add", browser)
-//        NavigationHelper.windowIsDisplayed("Add SWIFT code", browser)
-//        NavigationHelper.selectFieldAndSetValue("Code", "BNS123ZASXX", "Add SWIFT code", browser)
-//        NavigationHelper.selectFieldAndSetValue("Bank name", "Test bank", "Add SWIFT code", browser)
-//        NavigationHelper.selectFieldOfDropdownListAndSetValue("Country", "Greece", "Add SWIFT code", browser)
-//        NavigationHelper.selectFieldAndSetValue("Address", "Test address", "Add SWIFT code", browser)
-//        NavigationHelper.selectFieldOfDropdownListAndSetValue("Enabled", "N", "Add SWIFT code", browser)
-//        NavigationHelper.pressButtonInWindow("Add SWIFT code", "Save", browser)
-//        NavigationHelper.windowWasClosedAutomatically("Add SWIFT code", browser)
-        applyFilterInWindow("Code", "LIKE", "BNS123ZASXX", "SWIFT codes manual", browser)
+        NavigationHelper.pressButtonInWindow("SWIFT codes manual", "Add", browser)
+        NavigationHelper.windowIsDisplayed("Add SWIFT code", browser)
+        NavigationHelper.selectFieldAndSetValue("Code", "BNS123ZASXX", "Add SWIFT code", browser)
+        NavigationHelper.selectFieldAndSetValue("Bank name", "Test bank", "Add SWIFT code", browser)
+        NavigationHelper.selectFieldOfDropdownListAndSetValue("Country", "Greece", "Add SWIFT code", browser)
+        NavigationHelper.selectFieldAndSetValue("Address", "Test address", "Add SWIFT code", browser)
+        NavigationHelper.selectFieldOfDropdownListAndSetValue("Enabled", "N", "Add SWIFT code", browser)
+        NavigationHelper.pressButtonInWindow("Add SWIFT code", "Save", browser)
+        NavigationHelper.windowWasClosedAutomatically("Add SWIFT code", browser)
+        FilterHelper.applyFilterInWindow("Code", "LIKE", "BNS123ZASXX","SWIFT codes manual", browser)
+        NavigationHelper.inWindowDisplayedRecords("SWIFT codes manual", 1, browser)
     }
 }
