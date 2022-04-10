@@ -7,7 +7,6 @@ import helpers.NavigationHelper
 import helpers.SessionHelper
 import io.github.bonigarcia.seljup.SeleniumJupiter
 import io.qameta.allure.Description
-import io.qameta.allure.Feature
 import io.qameta.allure.Story
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -37,7 +36,6 @@ class ClassicGebTest extends GebReportingTest {
 
     @Test
     @DisplayName(value = "Login in CBS")
-    @Feature(value = "Test for task blabla17")
     @Story(value = "Test for login with valid credentials")
     @Description("Тест на успешную авторизацию. Ожидается загрузка главной страницы.")
     void loginIsSuccessful() {
@@ -51,8 +49,29 @@ class ClassicGebTest extends GebReportingTest {
     }
 
     @Test
+    @DisplayName(value = "Login in CBS with invalid username")
+    @Story(value = "Test for login with invalid username")
+    @Description("Тест на отображение ошибки о неверных пользовательских данных.")
+    void loginWithInvalidUsername() {
+        SessionHelper.fillLoginField("invalid_username", browser)
+        SessionHelper.fillPasswordField("123_Qwerty", browser)
+        SessionHelper.pressLoginButtonWithoutVerificationPage(browser)
+        SessionHelper.errorIsDisplayed(browser)
+    }
+
+    @Test
+    @DisplayName(value = "Login in CBS with invalid password")
+    @Story(value = "Test for login with invalid password")
+    @Description("Тест на отображение ошибки о неверных пользовательских данных.")
+    void loginWithInvalidPassword() {
+        SessionHelper.fillLoginField("cbs-admin", browser)
+        SessionHelper.fillPasswordField("invalid_password", browser)
+        SessionHelper.pressLoginButtonWithoutVerificationPage(browser)
+        SessionHelper.errorIsDisplayed(browser)
+    }
+
+    @Test
     @DisplayName(value = "Create SWIFT code")
-    @Feature(value = "Test for task blabla18")
     @Story(value = "Test for creation manual swift code")
     @Description("Тест на создание новой записи в Manual SWIFT codes")
     void createSwiftCode() {

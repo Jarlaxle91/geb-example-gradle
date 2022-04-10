@@ -21,15 +21,18 @@ class MainPageCbs extends Page {
         menuItem { Navigator menu, String title -> menu.$('a', innerHTML: contains(title + '<')) }
 
         //windows
-        window { String titleName ->
+        window(required: false) { String titleName ->
             def header = $('body.x-body').$('div.x-window').$('div.x-title-text', text: contains(titleName))
             header.empty ? header : header.parents('div.x-window')
         }
 
         xmask(required: false) { window -> window.$('div.x-mask') }
         xmaskVisible(required: false) { window -> window.$('div.x-mask', 'aria-hidden': 'true') }
+        amountElementsInGrid(required: false) { window -> window.$('div.x-grid table') }
+
         //buttons
         button(required: false) { Navigator window, String buttonTitle -> window.$('.x-btn').has('.x-btn-inner', innerHTML: contains(buttonTitle)) }
+        windowButton(required: false) { window, buttonTitle -> window.$('.x-btn').has('.x-btn-inner', innerHTML: contains(buttonTitle)) }
 
         //fields
         textAreaByName { Navigator window, String inputName -> window.$('div.x-field', text: contains(inputName)).$('textarea') }
@@ -68,7 +71,6 @@ class MainPageCbs extends Page {
         primValueFilter(required: false) { $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
 
 
-//        filterPrimValueTrigger { $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
         filterPrimValueTrigger(required: false) { $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
 
         elementPrimValueList(required: false) { String primValue ->
