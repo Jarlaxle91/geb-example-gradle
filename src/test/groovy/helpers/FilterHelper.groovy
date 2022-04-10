@@ -2,9 +2,10 @@ package helpers
 
 import geb.Browser
 import geb.navigator.Navigator
+import org.openqa.selenium.By
 import pages.MainPageCbs
 
-class FiltersHelper {
+class FilterHelper {
 
     static applyFilterInWindow(String property, String operator, String value, String windowTitle, Browser browser) {
         Browser.drive(browser, {
@@ -28,51 +29,57 @@ class FiltersHelper {
         })
     }
 
-    static setMultifilter(Navigator window, data, Browser browser) {
-        expandFilter(window, browser)
-        clearFilter(window, browser)
-        def caclulatedDate
+    static setMultifilter(String windowTitle, Collection<Filter> data, Browser browser) {
+        Browser.drive(browser, {
+            at MainPageCbs
+            Navigator window = waitFor(10) { window(windowTitle) }
+            Navigator filterFirstValueTrigger = filterPrimValueTrigger
 
-        data.each {
-            selectValueOfPropertyField(window, it.name as String, browser)
-            selectValueOfOperatorField(window, it.operator as String, browser)
-            if (!filterPrimValueTrigger(window).isEmpty()) {
-                filterPrimValueTrigger(window).click()
-                if (it.primValue == 'Today') {
-                    caclulatedDate = DateTimeUtil.getNameOperday()
-                    def calculatedCell = waitFor { $('div.x-boundlist-item', text: caclulatedDate) }
-                    calculatedCell.click()
-                } else if (it.primValue.contains('Today ')) {
-                    caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.primValue)
-                    def calculatedCell = waitFor { page.$('div.x-boundlist-item', text: caclulatedDate) }
-                    calculatedCell.click()
-                } else
-                    firstFilterValueField(window).value(Store.getVar(it.primValue))
+            expandFilter(window, browser)
+            clearFilter(window, browser)
+            def caclulatedDate
+            data.each {
+                selectValueOfPropertyField(window, it.name as String, browser)
+                selectValueOfOperatorField(window, it.operator as String, browser)
 
-            } else {
-                if (it.primValue == 'Today') {
-                    caclulatedDate = DateTimeUtil.getNameOperday()
-                    firstFilterValueField(window).value(caclulatedDate)
-                } else if (it.primValue.contains('Today ')) {
-                    caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.primValue)
-                    firstFilterValueField(window).value(caclulatedDate)
-                } else
-                    firstFilterValueField(window).value(Store.getVar(it.primValue))
+                if (!filterFirstValueTrigger.isEmpty()) {
+                    filterFirstValueTrigger.click()
+                    if (it.primValue == 'Today') {
+                        caclulatedDate = DateTimeUtil.getNameOperday()
+                        def calculatedCell = waitFor { $('div.x-boundlist-item', text: caclulatedDate) }
+                        calculatedCell.click()
+                    } else if (it.primValue.contains('Today ')) {
+                        caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.primValue)
+                        def calculatedCell = waitFor { page.$('div.x-boundlist-item', text: caclulatedDate) }
+                        calculatedCell.click()
+                    } else
+                        filterFirstValueTrigger.value(Store.getVar(it.primValue))
+
+                } else {
+                    if (it.primValue == 'Today') {
+                        caclulatedDate = DateTimeUtil.getNameOperday()
+                        firstFilterValueField.value(caclulatedDate)
+                    } else if (it.primValue.contains('Today ')) {
+                        caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.primValue)
+                        firstFilterValueField.value(caclulatedDate)
+                    } else
+                        firstFilterValueField.value(Store.getVar(it.primValue))
+                }
+
+                if (!secondFilterValueField(window).empty) {
+                    if (it.secondValue == 'Today') {
+                        caclulatedDate = DateTimeUtil.getNameOperday()
+                        secondFilterValueField(window).value(caclulatedDate)
+                    } else if (it.secondValue.contains('Today ')) {
+                        caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.secondValue)
+                        secondFilterValueField(window).value(caclulatedDate)
+                    } else
+                        secondFilterValueField(window).value(Store.getVar(it.secondValue))
+                }
             }
-
-            if (!secondFilterValueField(window).empty) {
-                if (it.secondValue == 'Today') {
-                    caclulatedDate = DateTimeUtil.getNameOperday()
-                    page.secondFilterValueField(window).value(caclulatedDate)
-                } else if (it.secondValue.contains('Today ')) {
-                    caclulatedDate = DateTimeUtil.caclucateOperdayForFilter(it.secondValue)
-                    secondFilterValueField(window).value(caclulatedDate)
-                } else
-                    secondFilterValueField(window).value(Store.getVar(it.secondValue))
-            }
-        }
-        applyFilter(window, browser)
-        collapseFilter(window, browser)
+            applyFilter(window, browser)
+            collapseFilter(window, browser)
+        })
     }
 
 
@@ -102,6 +109,7 @@ class FiltersHelper {
     static void selectValueOfPropertyField(Navigator window, String property, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
+
             filterPropertyTrigger(window).click()
             elementPropertyList(property).click()
         })
@@ -118,7 +126,7 @@ class FiltersHelper {
     static void fillValueOfFilter(Navigator window, Object primValue, Object secondValue = null, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
-            if (!filterPrimValueTrigger1(window).empty) {
+            if (!filterPrimValueTrigger(window).empty) {
                 filterPrimValueTrigger.click()
                 waitFor() { !elementPrimValueList(primValue).empty }
                 sleep(100)
@@ -147,10 +155,17 @@ class FiltersHelper {
     static void collapseFilter(Navigator window, Browser browser) {
         Browser.drive(browser, {
             at MainPageCbs
-            waitFor() { collapseFilterButton(window).isEmpty() }
-            waitFor() { collapseFilterButton(window).isDisplayed() }
+            waitFor(10) { !collapseFilterButton(window).isEmpty() }
+            waitFor(10) { collapseFilterButton(window).isDisplayed() }
             collapseFilterButton(window).click()
         })
+    }
+
+    static class Filter {
+        String name
+        String operator
+        String primValue
+        String secondValue = ""
     }
 
 }

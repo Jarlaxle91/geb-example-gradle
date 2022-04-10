@@ -2,12 +2,11 @@ package tests
 
 import geb.Browser
 import geb.junit5.GebReportingTest
-import helpers.ManualSwiftCodesHelper
+import helpers.FilterHelper
 import helpers.NavigationHelper
 import helpers.SessionHelper
 import io.github.bonigarcia.seljup.SeleniumJupiter
 import io.qameta.allure.Description
-import io.qameta.allure.Feature
 import io.qameta.allure.Story
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -37,7 +36,6 @@ class ClassicGebTest extends GebReportingTest {
 
     @Test
     @DisplayName(value = "Login in CBS")
-    @Feature(value = "Test for task blabla17")
     @Story(value = "Test for login with valid credentials")
     @Description("Тест на успешную авторизацию. Ожидается загрузка главной страницы.")
     void loginIsSuccessful() {
@@ -51,22 +49,44 @@ class ClassicGebTest extends GebReportingTest {
     }
 
     @Test
+    @DisplayName(value = "Login in CBS with invalid username")
+    @Story(value = "Test for login with invalid username")
+    @Description("Тест на отображение ошибки о неверных пользовательских данных.")
+    void loginWithInvalidUsername() {
+        SessionHelper.fillLoginField("invalid_username", browser)
+        SessionHelper.fillPasswordField("123_Qwerty", browser)
+        SessionHelper.pressLoginButtonWithoutVerificationPage(browser)
+        SessionHelper.errorIsDisplayed(browser)
+    }
+
+    @Test
+    @DisplayName(value = "Login in CBS with invalid password")
+    @Story(value = "Test for login with invalid password")
+    @Description("Тест на отображение ошибки о неверных пользовательских данных.")
+    void loginWithInvalidPassword() {
+        SessionHelper.fillLoginField("cbs-admin", browser)
+        SessionHelper.fillPasswordField("invalid_password", browser)
+        SessionHelper.pressLoginButtonWithoutVerificationPage(browser)
+        SessionHelper.errorIsDisplayed(browser)
+    }
+
+    @Test
     @DisplayName(value = "Create SWIFT code")
-    @Feature(value = "Test for task blabla18")
     @Story(value = "Test for creation manual swift code")
     @Description("Тест на создание новой записи в Manual SWIFT codes")
     void createSwiftCode() {
         SessionHelper.authorizeInCbs("cbs-admin", "123_Qwerty", browser)
         NavigationHelper.openWindowByPath("Dictionaries > SWIFT codes > SWIFT codes manual", browser)
-//        NavigationHelper.pressButtonInWindow("SWIFT codes manual", "Add", browser)
-//        NavigationHelper.windowIsDisplayed("Add SWIFT code", browser)
-//        NavigationHelper.selectFieldAndSetValue("Code", "BNS123ZASXX", "Add SWIFT code", browser)
-//        NavigationHelper.selectFieldAndSetValue("Bank name", "Test bank", "Add SWIFT code", browser)
-//        NavigationHelper.selectFieldOfDropdownListAndSetValue("Country", "Greece", "Add SWIFT code", browser)
-//        NavigationHelper.selectFieldAndSetValue("Address", "Test address", "Add SWIFT code", browser)
-//        NavigationHelper.selectFieldOfDropdownListAndSetValue("Enabled", "N", "Add SWIFT code", browser)
-//        NavigationHelper.pressButtonInWindow("Add SWIFT code", "Save", browser)
-//        NavigationHelper.windowWasClosedAutomatically("Add SWIFT code", browser)
-        applyFilterInWindow("Code", "LIKE", "BNS123ZASXX", "SWIFT codes manual", browser)
+        NavigationHelper.pressButtonInWindow("SWIFT codes manual", "Add", browser)
+        NavigationHelper.windowIsDisplayed("Add SWIFT code", browser)
+        NavigationHelper.selectFieldAndSetValue("Code", "BNS123ZASXX", "Add SWIFT code", browser)
+        NavigationHelper.selectFieldAndSetValue("Bank name", "Test bank", "Add SWIFT code", browser)
+        NavigationHelper.selectFieldOfDropdownListAndSetValue("Country", "Greece", "Add SWIFT code", browser)
+        NavigationHelper.selectFieldAndSetValue("Address", "Test address", "Add SWIFT code", browser)
+        NavigationHelper.selectFieldOfDropdownListAndSetValue("Enabled", "N", "Add SWIFT code", browser)
+        NavigationHelper.pressButtonInWindow("Add SWIFT code", "Save", browser)
+        NavigationHelper.windowWasClosedAutomatically("Add SWIFT code", browser)
+        FilterHelper.applyFilterInWindow("Code", "LIKE", "BNS123ZASXX","SWIFT codes manual", browser)
+        NavigationHelper.inWindowDisplayedRecords("SWIFT codes manual", 1, browser)
     }
 }

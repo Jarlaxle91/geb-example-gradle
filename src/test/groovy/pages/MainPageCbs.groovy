@@ -21,13 +21,18 @@ class MainPageCbs extends Page {
         menuItem { Navigator menu, String title -> menu.$('a', innerHTML: contains(title + '<')) }
 
         //windows
-        window { String titleName ->
+        window(required: false) { String titleName ->
             def header = $('body.x-body').$('div.x-window').$('div.x-title-text', text: contains(titleName))
             header.empty ? header : header.parents('div.x-window')
         }
 
+        xmask(required: false) { window -> window.$('div.x-mask') }
+        xmaskVisible(required: false) { window -> window.$('div.x-mask', 'aria-hidden': 'true') }
+        amountElementsInGrid(required: false) { window -> window.$('div.x-grid table') }
+
         //buttons
-        button { Navigator window, String buttonTitle -> window.$('.x-btn').has('.x-btn-inner', innerHTML: contains(buttonTitle)) }
+        button(required: false) { Navigator window, String buttonTitle -> window.$('.x-btn').has('.x-btn-inner', innerHTML: contains(buttonTitle)) }
+        windowButton(required: false) { window, buttonTitle -> window.$('.x-btn').has('.x-btn-inner', innerHTML: contains(buttonTitle)) }
 
         //fields
         textAreaByName { Navigator window, String inputName -> window.$('div.x-field', text: contains(inputName)).$('textarea') }
@@ -41,42 +46,43 @@ class MainPageCbs extends Page {
         clearFilterButton { Navigator window -> window.$('a.clearButton') }
         applyFilterButton { Navigator window -> window.$('a.findButton') }
 
-        filterTrigger { Navigator window -> window.$("div", role: 'button')
+        filterTrigger(required: false) { Navigator window -> window.$("div", role: 'button')
                 .has("div.x-tool-expand-bottom") }
 
-        collapseFilterButton { Navigator window ->
+        collapseFilterButton(required: false) { Navigator window ->
             window.$("div", role: 'button').has("div.x-tool-collapse-top") }
 
-        filterPropertyTrigger { Navigator window ->
+        filterPropertyTrigger(required: false) { Navigator window ->
             window.$(By.xpath('(//div[contains(@class, "x-container-default")]' +
                     '//a[contains(@class, "filterCheckbox")]/../../..)[last()]' +
                     '//input[contains(@name, "filterField")]/../..//div[contains(@class, "x-form-trigger")]'))[0] }
 
-        elementPropertyList { String property ->
-            $(By.xpath('//div[contains(@class, "x-boundlist-floating")][last()]' +
-                    '//ul[contains(@class, "x-list-plain")]//li[text()="' + property + '"]')) }
+        elementPropertyList(required: false) { property -> $(By.xpath('//div[contains(@class, "x-boundlist-floating")][last()]//ul[contains(@class, "x-list-plain")]//li[text()="' + property + '"]')) }
 
-        filterOperatorTrigger { $(By.xpath('//input[contains(@name, "filterField")]/..' +
+
+        filterOperatorTrigger(required: false) { $(By.xpath('//input[contains(@name, "filterField")]/..' +
                     '//input[contains(@aria-owns, "boundlist")]/../../../../..//' +
                     'div[contains(@class, "FilterOperator")]//div[contains(@class, "x-form-arrow-trigger")]')).last() }
 
-        elementOperatorList { String operator ->
+        elementOperatorList(required: false) { String operator ->
             $(By.xpath('//div[contains(@class, "x-boundlist-floating")][last()]//ul[contains(@class, "x-list-plain")]' +
                     '//li[text()="' + operator + '"]')) }
 
-        filterPrimValueTrigger { window -> $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
-        filterPrimValueTrigger1 { window -> $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
+        primValueFilter(required: false) { $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
 
-        elementPrimValueList { String primValue ->
+
+        filterPrimValueTrigger(required: false) { $(By.xpath('//div[contains(@class, "FilterForm")][last() - 1]//div[contains(@class, "FilterValue")]//div[contains(@class, "x-form-arrow-trigger")]')) }
+
+        elementPrimValueList(required: false) { String primValue ->
             $(By.xpath('//div[contains(@class, "x-boundlist-floating")][last()]' +
                     '//ul[contains(@class, "x-list-plain")]//li[text()="' + primValue + '"]')) }
 
-        firstFilterValueField { Navigator window ->
+        firstFilterValueField(required: false) { Navigator window ->
             window.$(By.xpath('//input[contains(@name, "filterField")]' +
                     '/..//input[contains(@aria-owns, "boundlist")]/../../../../..' +
                     '//div[contains(@class, "FilterValue")]//div[contains(@class,"x-field")][1]//input')).last() }
 
-        secondFilterValueField { window ->
+        secondFilterValueField(required: false) { window ->
             window.$(By.xpath('//input[contains(@name, "filterField")]/..' +
                     '//input[contains(@aria-owns, "boundlist")]/../../../../..' +
                     '//div[contains(@class, "FilterValue")]//div[contains(@class,"x-field")][2]//input')).last() }

@@ -51,4 +51,20 @@ class SessionHelper {
             loginButton.click(MainPageCbs)
         })
     }
+
+    @Step(value = "Click login button without verification page")
+    static void pressLoginButtonWithoutVerificationPage(Browser browser) {
+        Browser.drive(browser, {
+            at CbsLoginPage
+            loginButton.click()
+        })
+    }
+
+    @Step(value = "Error about invalid credentials is displayed")
+    static void errorIsDisplayed(Browser browser) {
+        Browser.drive(browser, {
+            at CbsLoginPage
+            !loginForm.error.isEmpty()
+        })
+    }
 }
